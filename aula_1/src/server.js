@@ -1,44 +1,53 @@
-// forma CommonJS de importar um módulo
-// const http = require('http')
+import http from 'node:http'; 
 
-// forma ESmodules de importação
-import http from 'node:http';
+const port = 8080;
+const hostname = 'localhost';
 
-const hostname = '127.0.0.1';
-const port = '3000';
+const users = []; 
 
-const users = [];
+// const nome = 'Mai';
+// const idade = 23;
+// const caracteristica = 'Ser muito gentil';
 
-const server = http.createServer((request, response) => {
-    const { method, url } = request;
-
-    console.log(method, url)
-    if (method === 'GET' && url === '/users') {
-        
-        return response
-            .setHeader('Content-type', 'application/json')
-            .end(JSON.stringify(users))
-    }
+const server = http.createServer( async(req, res) => {
+  const { method, url } = req; 
+  
+  
+  
+  
+  if (method === 'GET' && url === '/users') {
+    return res
+    .setHeader('Content-type', 'application/json')
+    .end(JSON.stringify(users))
+  }
+  
+  if ( method === 'POST' && url === '/users' ) {
     
-    if (method === 'POST' && url === '/users') {
-        users.push(
-            {
-                'id': 1,
-                'name': 'John Doe',
-                'email': 'johndoe@email.com',
-                'age': 31,
-            }
-        );
-        return response.writeHead(201).end()
+    const buffers = [];
+
+    // reune as info do body da requisição
+    for await( const chunks of req) {
+      buffers.push(chunks);
     }
 
-    return response.writeHead(404).end();
+    // converte para json
+    const body = JSON.parse( Buffer.concat(buffers).toString() );
+    // coleta os parâmetros
+    const { nome, idade, caracteristica } = body;
+    
+    // sobe para o db
+    users.push(
+      {
+        nome: nome,
+        idade: idade,
+        caracteristica: caracteristica
+      });
+    
+    return res.writeHead(201).end();
+  }
+
+  return res.writeHead(404).end();
+
 })
 
-server.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/users`)
-});
-
-
-
-
+server.listen(port, hostname)
