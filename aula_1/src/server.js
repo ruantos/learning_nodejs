@@ -1,43 +1,29 @@
 import http from 'node:http'; 
+import { json } from '../middlewares/json.js';
 
-const port = 8080;
+const port = 3000;
 const hostname = 'localhost';
 
 const users = []; 
 
-// const nome = 'Mai';
-// const idade = 23;
-// const caracteristica = 'Ser muito gentil';
-
 const server = http.createServer( async(req, res) => {
-  const { method, url } = req; 
   
+  const { method, url } = req;   
   
-  
-  
+
+  await json(req, res);
+
   if (method === 'GET' && url === '/users') {
     return res
-    .setHeader('Content-type', 'application/json')
-    .end(JSON.stringify(users))
+          .end(JSON.stringify(users))
   }
   
   if ( method === 'POST' && url === '/users' ) {
+    const { id, nome, idade, caracteristica } = req.body;
     
-    const buffers = [];
-
-    // reune as info do body da requisição
-    for await( const chunks of req) {
-      buffers.push(chunks);
-    }
-
-    // converte para json
-    const body = JSON.parse( Buffer.concat(buffers).toString() );
-    // coleta os parâmetros
-    const { nome, idade, caracteristica } = body;
-    
-    // sobe para o db
     users.push(
       {
+        id: id,
         nome: nome,
         idade: idade,
         caracteristica: caracteristica
