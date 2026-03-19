@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "nome": "Kauã",
+      "idade": 18,
+      "caracteristica": "É proativo"
+    },
+    {
+      "id": 1,
+      "nome": "Kauã",
+      "idade": 18,
+      "caracteristica": "É proativo"
+    },
+    {
+      "id": 1,
+      "nome": "Kauã",
+      "idade": 18,
+      "caracteristica": "É proativo"
+    }
+  ]
+}
